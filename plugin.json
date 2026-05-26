@@ -1,0 +1,15 @@
+{
+  "name": "custom-skills-plugin",
+  "version": "1.0.0",
+  "description": "Customized development workflows and engineering skills",
+  "author": {
+    "name": "ingverd"
+  },
+  "license": "MIT",
+  "keywords": [
+    "skills",
+    "gtd",
+    "workflow",
+    "tdd"
+  ]
+}
