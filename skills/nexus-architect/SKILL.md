@@ -41,6 +41,9 @@ Every feature must be documented as a linked triad (The AST Nexus) to ensure lon
 - Provides atomic, executable instructions.
 - Must contain a `Parent` header linking to BOTH the ADR and the SPEC.
 
+### 4. Pull Request (The "Review")
+- After authoring, committing, and pushing the AST Triad documents, you MUST create a Pull Request (using `gh pr create` or similar) so the User can formally review and approve the architectural decisions before any implementation begins.
+
 ---
 
 ## Task Authoring Protocol (The "Hand-off" Standard)

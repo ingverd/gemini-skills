@@ -229,7 +229,7 @@ npm run lint
 npx tsc --noEmit
 ```
 
-Automate this with git hooks:
+> **CRITICAL GTD PROJECT OVERRIDE**: If you are in the GTD project, you MUST load `skill: dev-workflow` and follow its **Stage 8** for Pull Request creation. `dev-workflow` contains strict rules for PR titles (`TASK-XXX`) and a mandatory Russian markdown template for the PR body that you MUST use instead of generic descriptions.
 
 ```json
 // package.json (using lint-staged + husky)
