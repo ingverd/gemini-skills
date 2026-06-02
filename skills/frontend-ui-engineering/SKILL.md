@@ -37,6 +37,10 @@ AI-generated interfaces look identical and cheap. Follow these strict counters t
 - **Corner Radii Consistency**: Rely on the defined Ant Design 6 theme border-radii. Avoid rounding everything with extreme values (like generic `rounded-2xl`).
 - **Realistic Placeholder Copy**: Never use `Lorem Ipsum` or generic "Task 1", "Task 2". Use realistic task descriptions matching a GTD app (e.g., *"Подготовить презентацию для Олега"*, *"Купить молоко"*, *"Написать тесты для TaskStore"*).
 
+### 3. Universal Undo/Redo Support
+- **Rule**: EVERY user action that mutates an entity (Task, Note, Project, Person, Tag, etc.) MUST be reversible via global `Ctrl+Z` / `Cmd+Z`.
+- **Action**: When adding new stores or mutation methods, ensure they push to their `undoRedoState`, return `canUndo`/`canRedo` flags in updates, and integrate `getLastUndoTimestamp()` into the global `useUndoRedoKeyboard` listener (usually in `MainLayout`). The hotkey logic must properly handle alternative layouts (e.g., Russian `'я'` and `'н'`, or rely on `e.code === 'KeyZ'`).
+
 ---
 
 ## Component Architecture Patterns

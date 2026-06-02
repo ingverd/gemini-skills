@@ -57,9 +57,11 @@ Tasks written for developers or subagents must be executable without further cla
 
 ---
 
-## Delegate Protocol: Behavioral Proposal
-Before creating a TASK or starting implementation:
-1. **Description**: Describe the feature behavior in Russian (User path + UI logic).
-2. **Examples**: Provide 3-5 specific examples (e.g., Input: "..." -> Output: "...").
-3. **Approval**: Present this to the User (Oleg). Proceed ONLY after receiving "OK" or "GO".
-4. **Linkage**: Once approved, include the Proposal summary in the TASK.md.
+## Pipeline Synergy: Interview-Me -> Nexus-Architect
+
+**CRITICAL**: There is an intentional, synergistic loop between `/interview-me` and `/nexus-architect`. This is NOT a conflicting circular dependency. They form a two-step pipeline for building the right thing:
+
+1. **Extraction (`/interview-me`)**: Used *first* when the ask is vague, ambiguous, or underspecified. Its goal is to extract the *true intent* and finalize the requirements.
+2. **Architecture (`/nexus-architect`)**: Used *second* once requirements are clear (either explicitly provided or extracted via the interview). Its goal is to translate that intent into concrete system design (ADR, SPEC, TASK).
+
+**The Loop**: If you start with `/nexus-architect` and immediately realize the requirements are too vague or you are making too many assumptions, you MUST pause and invoke `/interview-me` to clarify intent. Conversely, `/interview-me` explicitly instructs you to transition to `/nexus-architect` once the interview is complete. Always prefer to use BOTH skills sequentially for major features.

@@ -32,6 +32,7 @@ Apply this skill when:
 4. **No Modals**: Everything uses routes! No modal windows are allowed in this project.
 5. **Clean Commits**: Commit messages must adhere to the `conventional-commits` skill.
 6. **No Direct Commits**: Never push or commit directly to the `master` branch. Always work on isolated feature branches.
+7. **Frontend Standards**: If your task involves ANY changes to the user interface, styling, or frontend components, you MUST also load and strictly follow the `frontend-ui-engineering` skill.
 
 ---
 
