@@ -71,6 +71,7 @@ Apply this skill when:
 *   Run tests again to ensure the refactoring did not break anything.
 
 ### Stage 7: Verification
+*   **Agent Pre-Presentation Check (CRITICAL)**: Before presenting the result to the user or considering the task done, you MUST invoke `skill: browser-testing-with-devtools` to verify UI/runtime behavior in a real browser and `skill: debugging-and-error-recovery` if any unexpected errors occur.
 *   Run typecheck and lint tools to ensure perfect code health:
   ```bash
   npx tsc --noEmit
@@ -110,5 +111,6 @@ Before completing the task and submitting the branch, ensure:
 - [ ] Zero TypeScript errors (`npx tsc --noEmit` passes).
 - [ ] Zero linting errors (`npm run lint` passes).
 - [ ] All tests pass successfully (`npx vitest run`).
+- [ ] Visual and runtime correctness verified using `skill: browser-testing-with-devtools`.
 - [ ] Documentation is updated if applicable (`node scripts/generate-docs.js`).
 - [ ] Commit messages follow the Conventional Commit standard.
