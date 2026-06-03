@@ -11,5 +11,37 @@
     "gtd",
     "workflow",
     "tdd"
+  ],
+  "slash_commands": [
+    {
+      "name": "workflow",
+      "description": "Trigger the 9-stage dev-workflow loop",
+      "instruction": "Please invoke the dev-workflow skill and strictly follow the 9-stage implementation loop."
+    },
+    {
+      "name": "test",
+      "description": "Trigger the test-engineer role",
+      "instruction": "Please act as a test-engineer and follow the rules in the test-engineer.md agent."
+    },
+    {
+      "name": "review",
+      "description": "Trigger the code-review-and-quality skill",
+      "instruction": "Please invoke the code-review-and-quality skill to review the recent changes."
+    },
+    {
+      "name": "spec",
+      "description": "Trigger the nexus-architect skill to plan",
+      "instruction": "Please invoke the nexus-architect skill to create or refine a specification."
+    },
+    {
+      "name": "ship",
+      "description": "Run the pre-launch checklist via parallel fan-out to specialist personas, then synthesize a go/no-go decision",
+      "instruction": "Invoke the shipping-and-launch skill. `/ship` is a fan-out orchestrator. It runs three specialist personas in parallel against the current change: 1. code-reviewer 2. security-auditor 3. test-engineer. Please invoke them in parallel."
+    },
+    {
+      "name": "code-simplify",
+      "description": "Simplify code for clarity and maintainability \u2014 reduce complexity without changing behavior",
+      "instruction": "Invoke the code-simplification skill to simplify recently changed code (or the specified scope) while preserving exact behavior."
+    }
   ]
 }
