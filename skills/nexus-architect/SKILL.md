@@ -65,3 +65,47 @@ Tasks written for developers or subagents must be executable without further cla
 2. **Architecture (`/nexus-architect`)**: Used *second* once requirements are clear (either explicitly provided or extracted via the interview). Its goal is to translate that intent into concrete system design (ADR, SPEC, TASK).
 
 **The Loop**: If you start with `/nexus-architect` and immediately realize the requirements are too vague or you are making too many assumptions, you MUST pause and invoke `/interview-me` to clarify intent. Conversely, `/interview-me` explicitly instructs you to transition to `/nexus-architect` once the interview is complete. Always prefer to use BOTH skills sequentially for major features.
+
+---
+
+## Behavioral Guardrails (Anti-Patterns & Principles)
+
+To ensure the Nexus Triad is built correctly and you do not rush into implementation, you MUST adhere to these behavioral principles:
+
+### 1. Surface Assumptions Immediately
+Before writing any SPEC or ADR, if requirements are even slightly ambiguous, list what you're assuming. The goal is to surface misunderstandings *before* code gets written.
+```
+ASSUMPTIONS I'M MAKING:
+1. This is a web application (not native mobile)
+2. We're targeting modern browsers only
+→ Correct me now or I'll proceed with these.
+```
+
+### 2. Reframe Instructions as Success Criteria
+When receiving vague requirements, translate them into concrete conditions:
+```
+REQUIREMENT: "Make the dashboard faster"
+REFRAMED SUCCESS CRITERIA:
+- Dashboard LCP < 2.5s on 4G connection
+- Initial data load completes in < 500ms
+→ Are these the right targets?
+```
+This lets you loop, retry, and problem-solve toward a clear goal rather than guessing.
+
+### 3. Boundaries
+Adhere to the Three-tier system of boundaries:
+- **Always do:** Run tests before commits, follow naming conventions, validate inputs.
+- **Ask first:** Database schema changes, adding dependencies, changing CI config, modifying architectural guardrails.
+- **Never do:** Commit secrets, edit vendor directories, remove failing tests without approval, bypass the "No Modals" rule.
+
+### 4. Common Rationalizations & Red Flags
+Do not fall for these rationalizations to skip the Nexus protocol:
+- "This is simple, I don't need a spec" -> Simple tasks don't need *long* specs, but they still need the triad.
+- "I'll write the spec after I code it" -> That's documentation, not specification.
+- "The user knows what they want" -> Even clear requests have implicit assumptions.
+
+**Red Flags (STOP immediately if you do these):**
+- Starting to write code without any written requirements.
+- Asking "should I just start building?" before clarifying what "done" means.
+- Implementing features not mentioned in any SPEC or TASK list.
+- Skipping the Triad because "it's obvious what to build".
