@@ -1,19 +1,13 @@
 ---
 name: nexus-architect
-description: Plan GTDing changes, author ADR/SPEC contracts, and create precise self-contained GitHub Issues for implementation. Use when designing behavior or architecture, writing or reviewing docs/decisions and docs/specs, decomposing approved work into executable issues, or auditing task quality and dependencies.
+description: Plan project changes, author ADR/SPEC contracts, and create precise self-contained GitHub Issues for implementation. Use when designing behavior or architecture, writing or reviewing architectural decisions and specifications, decomposing approved work into executable issues, or auditing task quality and dependencies.
 ---
 
 # Nexus Architect
 
 Treat GitHub Issues as the only source of truth for task identity, lifecycle, priority, execution profile, and dependencies. Keep architectural context versioned in the repository.
 
-Before authoring work, read the repository's current `AGENTS.md`. In GTDing also read:
-
-- `docs/decisions/030-github-issues-task-tracking.md`
-- `docs/specs/030-github-issues-task-tracking.md`
-- `.github/ISSUE_TEMPLATE/task.yml`
-
-Repository instructions override this skill when they are more specific.
+Before authoring work, inspect the repository's current agent instructions, contribution guide, ADR/SPEC conventions, issue templates, labels, and project configuration. Follow repository-specific paths and terminology rather than assuming a fixed layout. Repository instructions override this skill when they are more specific.
 
 ## Architecture chain
 
@@ -21,7 +15,7 @@ Use the smallest complete chain appropriate to the change:
 
 1. **ADR — why:** record a durable decision, alternatives, consequences, and compliance for new architecture, public interfaces, or meaningful trade-offs.
 2. **SPEC — what:** define observable behavior, boundaries, state transitions, failure behavior, and acceptance criteria. Link its parent ADR.
-3. **GitHub Issue — executable hand-off:** define how to deliver one bounded outcome. Link the merged ADR/SPEC by exact repository-relative paths.
+3. **GitHub Issue — executable hand-off:** define how to deliver one bounded outcome. Link the governing merged ADR/SPEC by exact repository-relative paths.
 4. **Pull Request — review and closure:** implement the Issue and include `Closes #NNN`. Merge, not task-file movement, closes the Issue.
 
 Do not create an ADR/SPEC merely to satisfy ceremony for a contract-free bug or chore. In that case use a reasoned `N/A — <reason>` in the Issue parent fields.
@@ -34,17 +28,17 @@ For new behavior, interfaces, or architecture:
 2. If intent remains ambiguous, pause and use `interview-me` before designing.
 3. Create or update ADR/SPEC on a planning branch. Do not modify application code in this phase.
 4. Push the documents and open a planning PR against the exact branch of origin.
-5. End the planning hand-off with the repository-required approval marker. In GTDing use exactly `[СТАТУС: ОЖИДАНИЕ АППРУВА]`.
-6. After the architecture PR is merged, create the executable Issue through `.github/ISSUE_TEMPLATE/task.yml` and leave it in `status:triage` until explicitly approved.
+5. End the planning hand-off with the repository-required approval marker. If none exists, state explicitly that implementation is awaiting approval.
+6. After the architecture PR is merged, create the executable Issue through the repository's task template when one exists and leave it in the repository's triage state until explicitly approved.
 
-Never create `tasks/TASK-*.md`, choose a `TASK-NNN` identifier, restore `tasks/INDEX.md`, or treat `docs/archive/tasks/` as executable work. GitHub assigns the Issue number.
+Do not invent a parallel task identifier, task file, or status ledger unless the repository explicitly requires one. When GitHub Issues are the configured task system, use the GitHub-assigned Issue number.
 
 ## Issue contract
 
 Write for an executor with no chat history. A task Issue must contain:
 
-- `Parent ADR`: existing `docs/decisions/*.md`, or reasoned `N/A` for a contract-free bug/chore;
-- `Parent SPEC`: existing `docs/specs/*.md`, or reasoned `N/A`;
+- `Parent ADR`: exact repository-relative path to the governing ADR, or reasoned `N/A` for a contract-free bug/chore;
+- `Parent SPEC`: exact repository-relative path to the governing specification, or reasoned `N/A`;
 - `User outcome`: observable result for a user, operator, or maintainer;
 - `Technical context`: exact boundaries, files, routes, stores, functions, external systems, and preserved contracts;
 - `Definition of Done`: independently checkable outcomes, including negative and compatibility expectations;
@@ -85,7 +79,7 @@ Use Gemini only when the Issue has explicit boundaries and validation:
 
 ## Lifecycle
 
-Maintain exactly one lifecycle label:
+Use the repository's configured lifecycle states and maintain exactly one active lifecycle state. When no convention exists, propose this default:
 
 1. `status:triage` — authored but not approved;
 2. `status:ready` — approved and unblocked;
@@ -109,6 +103,6 @@ Reject or refine an Issue when any of these are true:
 - priority, reasoning, or delegation lacks a defensible risk basis;
 - multiple lifecycle labels exist;
 - dependencies are prose-only despite having corresponding Issues;
-- the Issue recreates a legacy `TASK-NNN` identity or file.
+- the Issue creates a competing task identity or status record outside the repository's configured task system.
 
 Finish by stating what was authored, which assumptions remain, the approval state, and the next permitted action.
