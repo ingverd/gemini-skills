@@ -1,111 +1,114 @@
 ---
 name: nexus-architect
-description: Architectural protocol for planning, documenting, and authoring precise tasks (The AST Nexus).
-version: 1.0.0
+description: Plan GTDing changes, author ADR/SPEC contracts, and create precise self-contained GitHub Issues for implementation. Use when designing behavior or architecture, writing or reviewing docs/decisions and docs/specs, decomposing approved work into executable issues, or auditing task quality and dependencies.
 ---
 
-# Nexus Architect (The AST Nexus)
+# Nexus Architect
 
-## Overview
-This skill outlines the protocol for architectural decision-making, specification writing, and creating precise, executable tasks for builders. It enforces that every feature is documented as a linked triad (ADR, SPEC, TASK) to maintain a robust architectural design.
+Treat GitHub Issues as the only source of truth for task identity, lifecycle, priority, execution profile, and dependencies. Keep architectural context versioned in the repository.
 
----
+Before authoring work, read the repository's current `AGENTS.md`. In GTDing also read:
 
-## When to Use
-Apply this skill when:
-- Designing a new system feature or major architectural change.
-- Creating or editing Architectural Decision Records (ADRs) under `docs/decisions/`.
-- Authoring component specifications (SPECs) or task instructions (TASKs) for development.
-- Conducting compliance audits on existing specs.
+- `docs/decisions/030-github-issues-task-tracking.md`
+- `docs/specs/030-github-issues-task-tracking.md`
+- `.github/ISSUE_TEMPLATE/task.yml`
 
-**When NOT to Use:**
-- Writing actual production code or styling elements.
-- Fixing trivial bugs or minor issues that do not modify system contracts.
+Repository instructions override this skill when they are more specific.
 
----
+## Architecture chain
 
-## The AST Nexus Triad
+Use the smallest complete chain appropriate to the change:
 
-Every feature must be documented as a linked triad (The AST Nexus) to ensure long-term maintainability and builder precision:
+1. **ADR — why:** record a durable decision, alternatives, consequences, and compliance for new architecture, public interfaces, or meaningful trade-offs.
+2. **SPEC — what:** define observable behavior, boundaries, state transitions, failure behavior, and acceptance criteria. Link its parent ADR.
+3. **GitHub Issue — executable hand-off:** define how to deliver one bounded outcome. Link the merged ADR/SPEC by exact repository-relative paths.
+4. **Pull Request — review and closure:** implement the Issue and include `Closes #NNN`. Merge, not task-file movement, closes the Issue.
 
-### 1. ADR (The "Why")
-- Explains the motive, strategy, and technical trade-offs.
-- References the SPEC in the `Implementation Guidance` section.
-- Must document: Status, Context, Alternatives Considered (with reasons for rejection), Decision, Consequences, and Compliance.
+Do not create an ADR/SPEC merely to satisfy ceremony for a contract-free bug or chore. In that case use a reasoned `N/A — <reason>` in the Issue parent fields.
 
-### 2. SPEC (The "What")
-- Defines the source of truth for UX, state behavior, and business logic.
-- References the parent ADR in the header.
+## Planning workflow
 
-### 3. TASK (The "How")
-- Provides atomic, executable instructions.
-- Must contain a `Parent` header linking to BOTH the ADR and the SPEC.
+For new behavior, interfaces, or architecture:
 
-### 4. Pull Request (The "Review")
-- After authoring, committing, and pushing the AST Triad documents, you MUST create a Pull Request (using `gh pr create` or similar) so the User can formally review and approve the architectural decisions before any implementation begins.
+1. Surface material assumptions and convert the request into measurable success criteria.
+2. If intent remains ambiguous, pause and use `interview-me` before designing.
+3. Create or update ADR/SPEC on a planning branch. Do not modify application code in this phase.
+4. Push the documents and open a planning PR against the exact branch of origin.
+5. End the planning hand-off with the repository-required approval marker. In GTDing use exactly `[СТАТУС: ОЖИДАНИЕ АППРУВА]`.
+6. After the architecture PR is merged, create the executable Issue through `.github/ISSUE_TEMPLATE/task.yml` and leave it in `status:triage` until explicitly approved.
 
----
+Never create `tasks/TASK-*.md`, choose a `TASK-NNN` identifier, restore `tasks/INDEX.md`, or treat `docs/archive/tasks/` as executable work. GitHub assigns the Issue number.
 
-## Task Authoring Protocol (The "Hand-off" Standard)
-Tasks written for developers or subagents must be executable without further clarification and include:
+## Issue contract
 
-1. **Definition of Done (DoD)**: Checkable list of outcomes.
-2. **Technical Context**: Specific files, existing stores, or functions to modify.
-3. **Draft Implementation Plan**: Step-by-step logic guide.
-4. **Test Requirements**: Specific edge cases to cover with tests (TDD).
-5. **Hazards**: Known blockers, side effects, or atomic transaction risks.
+Write for an executor with no chat history. A task Issue must contain:
 
----
+- `Parent ADR`: existing `docs/decisions/*.md`, or reasoned `N/A` for a contract-free bug/chore;
+- `Parent SPEC`: existing `docs/specs/*.md`, or reasoned `N/A`;
+- `User outcome`: observable result for a user, operator, or maintainer;
+- `Technical context`: exact boundaries, files, routes, stores, functions, external systems, and preserved contracts;
+- `Definition of Done`: independently checkable outcomes, including negative and compatibility expectations;
+- `Test requirements`: concrete positive, negative, regression, integration, and browser checks proportional to risk;
+- `Hazards`: data-loss, security, concurrency, migration, compatibility, UX risks, and forbidden shortcuts;
+- `Priority`: `P0`, `P1`, `P2`, or `P3`;
+- `Primary model`: default `GPT-5.6 Sol`;
+- `Reasoning effort`: `low`, `medium`, `high`, `xhigh`, `max`, or `ultra`;
+- `Gemini delegation`: `safe with validation`, `conditional`, or `do not delegate`;
+- `Required validation`: independent reviewer and exact evidence to inspect;
+- `Dependencies`: Issue references and external prerequisites, or `None`.
 
-## Pipeline Synergy: Interview-Me -> Nexus-Architect
+Do not duplicate the complete ADR/SPEC inside the Issue. Include enough technical context that the executor knows what to inspect and what not to change.
 
-**CRITICAL**: There is an intentional, synergistic loop between `/interview-me` and `/nexus-architect`. This is NOT a conflicting circular dependency. They form a two-step pipeline for building the right thing:
+## Execution profile
 
-1. **Extraction (`/interview-me`)**: Used *first* when the ask is vague, ambiguous, or underspecified. Its goal is to extract the *true intent* and finalize the requirements.
-2. **Architecture (`/nexus-architect`)**: Used *second* once requirements are clear (either explicitly provided or extracted via the interview). Its goal is to translate that intent into concrete system design (ADR, SPEC, TASK).
+Default to GPT-5.6 Sol. Choose reasoning from workload risk, not task size alone:
 
-**The Loop**: If you start with `/nexus-architect` and immediately realize the requirements are too vague or you are making too many assumptions, you MUST pause and invoke `/interview-me` to clarify intent. Conversely, `/interview-me` explicitly instructs you to transition to `/nexus-architect` once the interview is complete. Always prefer to use BOTH skills sequentially for major features.
+- `low`: verification, tiny localized edits, deterministic cleanup;
+- `medium`: bounded implementation with familiar patterns;
+- `high`: multi-file behavior, reviews, CI/tooling, non-trivial UX;
+- `xhigh`: cross-module work, migrations, release-critical integration;
+- `max` or `ultra`: destructive data paths, security boundaries, production rollout, or decisions with expensive failure.
 
----
+Use Gemini only when the Issue has explicit boundaries and validation:
 
-## Behavioral Guardrails (Anti-Patterns & Principles)
+- `safe with validation`: the whole bounded task may be delegated; Sol independently reviews the diff and evidence;
+- `conditional`: delegate only named slices, preserving Sol ownership of integration or risky decisions;
+- `do not delegate`: keep destructive, security-sensitive, architectural, or production actions with Sol/human review.
 
-To ensure the Nexus Triad is built correctly and you do not rush into implementation, you MUST adhere to these behavioral principles:
+## Dependencies and hierarchy
 
-### 1. Surface Assumptions Immediately
-Before writing any SPEC or ADR, if requirements are even slightly ambiguous, list what you're assuming. The goal is to surface misunderstandings *before* code gets written.
-```
-ASSUMPTIONS I'M MAKING:
-1. This is a web application (not native mobile)
-2. We're targeting modern browsers only
-→ Correct me now or I'll proceed with these.
-```
+- Use native GitHub `blocked by` relationships for causal blockers.
+- Use native sub-issues for an epic or initiative.
+- Keep external approvals in `Dependencies` and use `status:blocked` when they prevent execution.
+- Do not infer a blocker merely because another Issue is mentioned.
+- Treat GitHub Project fields as a portfolio view; Issue body, labels, and native relationships remain authoritative.
 
-### 2. Reframe Instructions as Success Criteria
-When receiving vague requirements, translate them into concrete conditions:
-```
-REQUIREMENT: "Make the dashboard faster"
-REFRAMED SUCCESS CRITERIA:
-- Dashboard LCP < 2.5s on 4G connection
-- Initial data load completes in < 500ms
-→ Are these the right targets?
-```
-This lets you loop, retry, and problem-solve toward a clear goal rather than guessing.
+## Lifecycle
 
-### 3. Boundaries
-Adhere to the Three-tier system of boundaries:
-- **Always do:** Run tests before commits, follow naming conventions, validate inputs.
-- **Ask first:** Database schema changes, adding dependencies, changing CI config, modifying architectural guardrails.
-- **Never do:** Commit secrets, edit vendor directories, remove failing tests without approval, bypass the "No Modals" rule.
+Maintain exactly one lifecycle label:
 
-### 4. Common Rationalizations & Red Flags
-Do not fall for these rationalizations to skip the Nexus protocol:
-- "This is simple, I don't need a spec" -> Simple tasks don't need *long* specs, but they still need the triad.
-- "I'll write the spec after I code it" -> That's documentation, not specification.
-- "The user knows what they want" -> Even clear requests have implicit assumptions.
+1. `status:triage` — authored but not approved;
+2. `status:ready` — approved and unblocked;
+3. `status:in-progress` — implementation started;
+4. `status:blocked` — dependency or decision prevents progress;
+5. `status:in-review` — PR opened with `Closes #NNN`;
+6. closed/Done — PR merged.
 
-**Red Flags (STOP immediately if you do these):**
-- Starting to write code without any written requirements.
-- Asking "should I just start building?" before clarifying what "done" means.
-- Implementing features not mentioned in any SPEC or TASK list.
-- Skipping the Triad because "it's obvious what to build".
+Creating an Issue is not implementation approval. Start code only after `status:ready` or explicit user approval.
+
+## Quality audit
+
+Reject or refine an Issue when any of these are true:
+
+- the outcome is phrased only as code changes;
+- ADR/SPEC paths are placeholders, missing, or escape the repository;
+- DoD cannot be checked independently;
+- tests say only "add tests" without scenarios;
+- hazards omit an obvious destructive or compatibility risk;
+- implementation requires hidden chat context;
+- priority, reasoning, or delegation lacks a defensible risk basis;
+- multiple lifecycle labels exist;
+- dependencies are prose-only despite having corresponding Issues;
+- the Issue recreates a legacy `TASK-NNN` identity or file.
+
+Finish by stating what was authored, which assumptions remain, the approval state, and the next permitted action.
